@@ -8,6 +8,10 @@ import { useShoppingList } from "@/context/ShoppingListContext";
 import { useProduct } from "@/context/ProductContext";
 import { useStore } from "@/context/StoreContext";
 import { Search } from "lucide-react";
+import StoreLocator from "@/components/location/StoreLocator";
+import PriceComparisonWidget from "@/components/products/PriceComparisonWidget";
+import ProductSuggestions from "@/components/products/ProductSuggestions";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const Dashboard = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -95,6 +99,27 @@ const Dashboard = () => {
           icon="store" 
           variant="accent" 
         />
+      </div>
+      
+      {/* Store Locator - NEW */}
+      <div className="mb-8">
+        <StoreLocator />
+      </div>
+      
+      {/* Tabbed content for Price Comparison and Suggestions - NEW */}
+      <div className="mb-8">
+        <Tabs defaultValue="comparison" className="w-full">
+          <TabsList className="mb-4">
+            <TabsTrigger value="comparison">Comparaison de prix</TabsTrigger>
+            <TabsTrigger value="suggestions">Suggestions de produits</TabsTrigger>
+          </TabsList>
+          <TabsContent value="comparison">
+            <PriceComparisonWidget />
+          </TabsContent>
+          <TabsContent value="suggestions">
+            <ProductSuggestions />
+          </TabsContent>
+        </Tabs>
       </div>
       
       {/* Current shopping list */}
