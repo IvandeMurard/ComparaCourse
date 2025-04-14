@@ -8,6 +8,7 @@ CREATE TABLE "favorite_products" (
 --> statement-breakpoint
 CREATE TABLE "price_alerts" (
 	"id" serial PRIMARY KEY NOT NULL,
+	"user_id" integer NOT NULL,
 	"product_id" integer NOT NULL,
 	"store_id" integer NOT NULL,
 	"old_price" double precision NOT NULL,
