@@ -79,13 +79,8 @@ export const prices = pgTable("prices", {
   productId: integer("product_id").notNull(),
   storeId: integer("store_id").notNull(),
   price: doublePrecision("price").notNull(),
-  currency: text("currency").default("EUR").notNull(),
-  isOnlinePrice: boolean("is_online_price").default(false),
   promo: boolean("promo").default(false),
   oldPrice: doublePrecision("old_price"),
-  verificationSource: text("verification_source"),
-  verificationDate: timestamp("verification_date").defaultNow(),
-  confidenceScore: integer("confidence_score").default(100),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
@@ -93,12 +88,8 @@ export const insertPriceSchema = createInsertSchema(prices).pick({
   productId: true,
   storeId: true,
   price: true,
-  currency: true,
-  isOnlinePrice: true,
   promo: true,
   oldPrice: true,
-  verificationSource: true,
-  confidenceScore: true,
 });
 
 export type InsertPrice = z.infer<typeof insertPriceSchema>;
@@ -109,7 +100,6 @@ export const shoppingLists = pgTable("shopping_lists", {
   id: serial("id").primaryKey(),
   userId: integer("user_id").notNull(),
   name: text("name").notNull(),
-  preferredStoreId: integer("preferred_store_id").references(() => stores.id),
   status: text("status").default("active"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
@@ -118,7 +108,6 @@ export const shoppingLists = pgTable("shopping_lists", {
 export const insertShoppingListSchema = createInsertSchema(shoppingLists).pick({
   userId: true,
   name: true,
-  preferredStoreId: true,
   status: true,
 });
 
@@ -289,7 +278,6 @@ export const storesRelations = relations(stores, ({ many }) => ({
   prices: many(prices),
   priceAlerts: many(priceAlerts),
   purchaseHistory: many(purchaseHistory),
-  shoppingLists: many(shoppingLists),
 }));
 
 export const productsRelations = relations(products, ({ many }) => ({
@@ -317,10 +305,6 @@ export const shoppingListsRelations = relations(shoppingLists, ({ one, many }) =
   user: one(users, {
     fields: [shoppingLists.userId],
     references: [users.id],
-  }),
-  preferredStore: one(stores, {
-    fields: [shoppingLists.preferredStoreId],
-    references: [stores.id],
   }),
   items: many(shoppingListItems)
 }));
