@@ -1,6 +1,7 @@
-import { pgTable, text, serial, integer, boolean, timestamp, doublePrecision } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, timestamp, doublePrecision, primaryKey } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
+import { relations } from "drizzle-orm";
 
 // User model
 export const users = pgTable("users", {
@@ -155,3 +156,73 @@ export const insertPriceAlertSchema = createInsertSchema(priceAlerts).pick({
 
 export type InsertPriceAlert = z.infer<typeof insertPriceAlertSchema>;
 export type PriceAlert = typeof priceAlerts.$inferSelect;
+
+// Relations
+export const usersRelations = relations(users, ({ many }) => ({
+  shoppingLists: many(shoppingLists),
+  favoriteProducts: many(favoriteProducts)
+}));
+
+export const storesRelations = relations(stores, ({ many }) => ({
+  prices: many(prices),
+  priceAlerts: many(priceAlerts)
+}));
+
+export const productsRelations = relations(products, ({ many }) => ({
+  prices: many(prices),
+  shoppingListItems: many(shoppingListItems),
+  favoriteProducts: many(favoriteProducts),
+  priceAlerts: many(priceAlerts)
+}));
+
+export const pricesRelations = relations(prices, ({ one }) => ({
+  product: one(products, {
+    fields: [prices.productId],
+    references: [products.id],
+  }),
+  store: one(stores, {
+    fields: [prices.storeId],
+    references: [stores.id],
+  })
+}));
+
+export const shoppingListsRelations = relations(shoppingLists, ({ one, many }) => ({
+  user: one(users, {
+    fields: [shoppingLists.userId],
+    references: [users.id],
+  }),
+  items: many(shoppingListItems)
+}));
+
+export const shoppingListItemsRelations = relations(shoppingListItems, ({ one }) => ({
+  shoppingList: one(shoppingLists, {
+    fields: [shoppingListItems.shoppingListId],
+    references: [shoppingLists.id],
+  }),
+  product: one(products, {
+    fields: [shoppingListItems.productId],
+    references: [products.id],
+  })
+}));
+
+export const favoriteProductsRelations = relations(favoriteProducts, ({ one }) => ({
+  user: one(users, {
+    fields: [favoriteProducts.userId],
+    references: [users.id],
+  }),
+  product: one(products, {
+    fields: [favoriteProducts.productId],
+    references: [products.id],
+  })
+}));
+
+export const priceAlertsRelations = relations(priceAlerts, ({ one }) => ({
+  product: one(products, {
+    fields: [priceAlerts.productId],
+    references: [products.id],
+  }),
+  store: one(stores, {
+    fields: [priceAlerts.storeId],
+    references: [stores.id],
+  })
+}));
