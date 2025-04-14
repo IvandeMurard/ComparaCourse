@@ -1,6 +1,50 @@
+# Dépendances
 node_modules
+.pnp
+.pnp.js
+
+# Tests
+coverage
+
+# Production
 dist
+build
+
+# Divers
 .DS_Store
-server/public
-vite.config.ts.*
-*.tar.gz
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.*
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+logs
+*.log
+
+# Éditeurs
+.idea
+.vscode
+*.swp
+*.swo
+
+# Fichiers de sauvegarde
+*~
+*.bak
+
+# Cache
+.cache
+.npm
+.eslintcache
+
+# Fichiers système
+Thumbs.db
+desktop.ini
+
+# Fichiers Drizzle
+.drizzle
+drizzle-kit.config.*
