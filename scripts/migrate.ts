@@ -10,7 +10,7 @@ const seedDatabase = async () => {
   const db = drizzle(pool, { schema });
 
   // Vérifier si l'utilisateur 'user' existe déjà
-  const existingUser = await db.select().from(schema.users).where(eq => eq(schema.users.username, 'user'));
+  const existingUser = await db.select().from(schema.users).where(eq(schema.users.username, 'user'));
   
   if (existingUser.length === 0) {
     console.log('🌱 Création des données de test...');
@@ -159,7 +159,7 @@ async function main() {
   
   console.log('🛠 Application des changements de schéma...');
   // Effectue la migration en utilisant le schéma
-  await migrate(db, { migrationsFolder: './drizzle' });
+  await migrate(db, { migrationsFolder: './migrations' });
   
   console.log('✅ Migration terminée avec succès!');
   
